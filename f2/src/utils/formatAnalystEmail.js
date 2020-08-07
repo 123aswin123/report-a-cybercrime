@@ -378,15 +378,17 @@ const formatSuspectDetails = (data) => {
 }
 
 const formatFinancialTransactions = (data) => {
-  const methods =
-    data.moneyLost.methodOther && data.moneyLost.methodOther.length > 0
-      ? data.moneyLost.methodPayment.concat([data.moneyLost.methodOther])
-      : data.moneyLost.methodPayment
+  const methods = data.moneyLost.methodPayment
 
-  const paymentString = methods
+  const paymentStringOrig = methods
     .filter((method) => method !== 'methodPayment.other')
     .map((method) => unCamel(method.replace('methodPayment.', '')))
     .join(', ')
+
+  let paymentString =
+    data.moneyLost.methodOther && data.moneyLost.methodOther.length > 0
+      ? String(paymentStringOrig) + ', ' + [data.moneyLost.methodOther]
+      : String(paymentStringOrig)
 
   const transactionDate = formatDate(
     data.moneyLost.transactionDay,
